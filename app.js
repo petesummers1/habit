@@ -1,82 +1,65 @@
-const habits = [
-  "Time Blocking",
-  "Journaling",
-  "Gratitude Practice",
-  "Daily Goal Setting",
-  "Movement Breaks",
-  "Digital Detox",
-  "Mindful Eating",
-  "Active Listening",
-  "Visualize Success"
-];
+// Get the current date
+var currentDate = new Date();
 
-const habitData = habits.map((habit) => {
-  return {
-    habit: habit,
-    completed: false
-  };
-});
+// Define an array of month names
+var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-function showPage(pageId) {
-  const pages = document.querySelectorAll(".page");
-  pages.forEach((page) => {
-    if (page.id === pageId) {
-      page.style.display = "block";
-    } else {
-      page.style.display = "none";
+// Define an array of day names
+var dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+// Create a function to generate the calendar
+function generateCalendar(year, month) {
+
+  // Create a new date object with the specified year and month
+  var date = new Date(year, month, 1);
+
+  // Get the number of days in the specified month
+  var numDays = new Date(year, month + 1, 0).getDate();
+
+  // Create an empty table to hold the calendar
+  var calendar = '<table>';
+
+  // Add the month and year to the calendar
+  calendar += '<thead><tr><th colspan="7">' + monthNames[month] + ' ' + year + '</th></tr>';
+
+  // Add the day names to the calendar
+  calendar += '<tr>';
+  for (var i = 0; i < dayNames.length; i++) {
+    calendar += '<th>' + dayNames[i] + '</th>';
+  }
+  calendar += '</tr></thead>';
+
+  // Add the dates to the calendar
+  calendar += '<tbody><tr>';
+  for (var i = 0; i < date.getDay(); i++) {
+    calendar += '<td></td>';
+  }
+  for (var i = 1; i <= numDays; i++) {
+    if (date.getDay() == 0) {
+      calendar += '</tr><tr>';
     }
-  });
+    calendar += '<td>' + i + '</td>';
+    date.setDate(date.getDate() + 1);
+  }
+  for (var i = date.getDay(); i < 7; i++) {
+    calendar += '<td></td>';
+  }
+  calendar += '</tr></tbody></table>';
+
+  // Return the generated calendar
+  return calendar;
 }
 
-function createHabitList() {
-  const habitList = document.getElementById("habit-list");
+// Add the calendar to the page
+document.getElementById('calendar').innerHTML = generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
 
-  habits.forEach((habitName, index) => {
-    const listItem = document.createElement("li");
+// Make the month scrollable
+var calendar = document.getElementById('calendar');
+calendar.style.overflowX = 'scroll';
+calendar.style.whiteSpace = 'nowrap';
+calendar.style.display = 'flex';
 
-    const habitText = document.createElement("span");
-    habitText.innerText = habitName;
-    listItem.appendChild(habitText);
-
-    const completeButton = document.createElement("button");
-    completeButton.innerText = "Complete";
-    completeButton.addEventListener("click", function() {
-      habitText.classList.toggle("completed");
-      habitData[index].completed = !habitData[index].completed;
-      updateChart();
-    });
-    listItem.appendChild(completeButton);
-
-    habitList.appendChild(listItem);
-  });
-}
-
-function createChart() {
-  const ctx = document.getElementById("habit-chart").getContext("2d");
-  const chartData = {
-    labels: habits,
-    datasets: [
-      {
-        label: "Habits",
-        data: habitData.map((habit) => (habit.completed ? 1 : 0)),
-        backgroundColor: "rgba(75, 192, 192, 1)"
-      }
-    ]
-  };
-
-  return new Chart(ctx, {
-    type: "bar",
-    data: chartData,
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 1,
-          ticks: {
-            display: false
-          }
-        }
-      },
-      plugins: {
-        legend: {
-         
+// Make the dates appear as the top row
+var thead = calendar.getElementsByTagName('thead')[0];
+thead.style.position = 'sticky';
+thead.style.top = '0';
