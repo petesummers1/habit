@@ -1,37 +1,36 @@
-body {
-  font-family: Arial, sans-serif;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 1rem;
+/* Style for the calendar table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
 }
 
-h1 {
+th,
+td {
+  padding: 10px;
   text-align: center;
+  border: 1px solid #ccc;
 }
 
-form {
+th {
+  background-color: #eee;
+  font-weight: bold;
+}
+
+tbody td:hover {
+  background-color: #eee;
+}
+
+/* Style for the month scrollable */
+#calendar {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
+  overflow-x: scroll;
+  white-space: nowrap;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem;
-  border-bottom: 1px solid #ccc;
-}
-
-button {
-  cursor: pointer;
-}
-
-.completed {
-  text-decoration: line-through;
+/* Style for the dates to appear as the top row */
+thead {
+  position: sticky;
+  top: 0;
+  background-color: #eee;
 }
