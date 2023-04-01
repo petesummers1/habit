@@ -1,35 +1,84 @@
-document.getElementById("habit-form").addEventListener("submit", function(event) {
-  event.preventDefault();
+const habits = [
+  "Time Blocking",
+  "Journaling",
+  "Gratitude Practice",
+  "Daily Goal Setting",
+  "Movement Breaks",
+  "Digital Detox",
+  "Mindful Eating",
+  "Active Listening",
+  "Visualize Success"
+];
 
-  const habitInput = document.getElementById("habit");
-  const habitName = habitInput.value.trim();
-
-  if (habitName === "") {
-    alert("Please enter a habit name.");
-    return;
-  }
-
-  const listItem = document.createElement("li");
-
-  const habitText = document.createElement("span");
-  habitText.innerText = habitName;
-  listItem.appendChild(habitText);
-
-  const completeButton = document.createElement("button");
-  completeButton.innerText = "Complete";
-  completeButton.addEventListener("click", function() {
-    habitText.classList.toggle("completed");
-  });
-  listItem.appendChild(completeButton);
-
-  const deleteButton = document.createElement("button");
-  deleteButton.innerText = "Delete";
-  deleteButton.addEventListener("click", function() {
-    listItem.remove();
-  });
-  listItem.appendChild(deleteButton);
-
-  document.getElementById("habit-list").appendChild(listItem);
-
-  habitInput.value = "";
+const habitData = habits.map((habit) => {
+  return {
+    habit: habit,
+    completed: false
+  };
 });
+
+function createHabitList() {
+  const habitList = document.getElementById("habit-list");
+
+  habits.forEach((habitName, index) => {
+    const listItem = document.createElement("li");
+
+    const habitText = document.createElement("span");
+    habitText.innerText = habitName;
+    listItem.appendChild(habitText);
+
+    const completeButton = document.createElement("button");
+    completeButton.innerText = "Complete";
+    completeButton.addEventListener("click", function() {
+      habitText.classList.toggle("completed");
+      habitData[index].completed = !habitData[index].completed;
+      updateChart();
+    });
+    listItem.appendChild(completeButton);
+
+    habitList.appendChild(listItem);
+  });
+}
+
+function createChart() {
+  const ctx = document.getElementById("habit-chart").getContext("2d");
+  const chartData = {
+    labels: habits,
+    datasets: [
+      {
+        label: "Habits",
+        data: habitData.map((habit) => (habit.completed ? 1 : 0)),
+        backgroundColor: "rgba(75, 192, 192, 1)"
+      }
+    ]
+  };
+
+  return new Chart(ctx, {
+    type: "bar",
+    data: chartData,
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 1,
+          ticks: {
+            display: false
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          display: false
+        }
+      }
+    }
+  });
+}
+
+function updateChart() {
+  habitChart.data.datasets[0].data = habitData.map((habit) => (habit.completed ? 1 : 0));
+  habitChart.update();
+}
+
+createHabitList();
+const habitChart = createChart();
