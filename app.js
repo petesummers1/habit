@@ -17,6 +17,17 @@ const habitData = habits.map((habit) => {
   };
 });
 
+function showPage(pageId) {
+  const pages = document.querySelectorAll(".page");
+  pages.forEach((page) => {
+    if (page.id === pageId) {
+      page.style.display = "block";
+    } else {
+      page.style.display = "none";
+    }
+  });
+}
+
 function createHabitList() {
   const habitList = document.getElementById("habit-list");
 
@@ -68,17 +79,4 @@ function createChart() {
       },
       plugins: {
         legend: {
-          display: false
-        }
-      }
-    }
-  });
-}
-
-function updateChart() {
-  habitChart.data.datasets[0].data = habitData.map((habit) => (habit.completed ? 1 : 0));
-  habitChart.update();
-}
-
-createHabitList();
-const habitChart = createChart();
+         
